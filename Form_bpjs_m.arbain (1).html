@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulir 1a - BPJS Kesehatan</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      background: #f0f0f0;
+      padding: 20px;
+      color: #222;
+    }
+
+    .page {
+      background: #fff;
+      width: 800px;
+      margin: 0 auto;
+      padding: 20px 24px 24px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-svg { width: 54px; height: 54px; }
+
+    .brand-text { line-height: 1.2; }
+    .brand-text .bpjs { font-size: 20px; font-weight: 900; color: #005f9e; }
+    .brand-text .sub  { font-size: 13px; font-weight: 700; color: #005f9e; }
+
+    .form-number-box {
+      border: 1px solid #333;
+      padding: 3px 8px;
+      font-size: 10px;
+      text-align: center;
+    }
+    .form-number-box span { display: block; font-weight: 700; font-size: 13px; }
+
+    .form-title {
+      text-align: center;
+      font-weight: 700;
+      font-size: 11.5px;
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+
+    .form-type-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 8px;
+    }
+    .form-type-row label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+    background: #006837;
+    color: #fff;
+    font-weight: bold;
+    font-size: 10.5px;
+    padding: 4px 7px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+    /* ── GRID ROWS ── */
+    .form-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 4px;
+      gap: 6px;
+    }
+    .form-row.indent { padding-left: 12px; }
+
+    .lbl {
+      min-width: 140px;
+      flex-shrink: 0;
+      padding-top: 3px;
+      font-size: 10.5px;
+      line-height: 1.4;
+    }
+    .lbl.wide { min-width: 180px; }
+    .lbl.short { min-width: 80px; }
+    .lbl.xshort { min-width: 50px; }
+    .lbl.sub { font-size: 9px; color: #555; }
+
+    /* ── INPUT BOXES ── */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      border: 1px solid #888;
+      border-radius: 0;
+      padding: 2px 4px;
+      font-size: 10.5px;
+      height: 22px;
+      outline: none;
+      background: #fff;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus { border-color: #005f9e; background: #f0f7ff; }
+
+    .inp-full  { flex: 1; width: 100%; }
+    .inp-sm    { width: 60px; }
+    .inp-md    { width: 100px; }
+    .inp-lg    { width: 180px; }
+    .inp-xl    { width: 240px; }
+    .inp-date  { width: 70px; }
+    .inp-year  { width: 55px; }
+
+    /* character boxes (NPP / KPJ style) */
+    .char-boxes {
+      display: flex;
+      gap: 2px;
+    }
+    .char-boxes input {
+      width: 18px;
+      text-align: center;
+      padding: 0;
+      font-size: 10px;
+    }
+    .char-boxes1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    }
+    .char-box1 {
+    width: 18px;
+    height: 18px;
+    border: 0.8px solid #555;
+    display: inline-block;
+    margin-right: -0.4px;
+    text-align: center;
+    font-size: 11px;
+    }
+
+    /* ── RADIO GROUPS ── */
+    .radio-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .radio-group label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-size: 10.5px; }
+
+    /* ── NPP / KPJ box ── */
+    .bpjs-box {
+      border: 1px solid #888;
+      padding: 6px 8px;
+      background: #f5f5f5;
+      min-width: 200px;
+      font-size: 10px;
+    }
+    .bpjs-box .bpjs-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .bpjs-box .bpjs-lbl { min-width: 28px; font-weight: 700; }
+    .bpjs-box small { display: block; font-size: 9px; color: #666; margin-bottom: 4px; font-style: italic; }
+
+    /* ── NAME BLOCK ── */
+    .name-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 10px;
+      flex: 1;
+    }
+    .name-grid .ng-lbl { font-size: 9.5px; color: #555; }
+    .name-grid .ng-row { display: flex; flex-direction: column; gap: 1px; }
+
+    /* ── LAST EDUCATION ── */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+    .edu-grid label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-size: 10.5px; }
+
+    /* ── ADDRESS BLOCK ── */
+    .addr-lines { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .addr-city-row { display: flex; gap: 10px; }
+
+    /* ── BANK SECTION ── */
+    .bank-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .kode-bank-box {
+      border: 1px solid #888;
+      padding: 4px 6px;
+      font-size: 9px;
+      text-align: center;
+    }
+    .kode-bank-box input { width: 70px; margin-top: 2px; }
+
+    /* ── BAGIAN II TABLE ── */
+    .family-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5px;
+  }
+  .family-table th {
+    background: #006837;
+    color: #fff;
+    border: 0.8px solid #004d28;
+    padding: 4px 5px;
+    text-align: center;
+    font-size: 9px;
+    font-weight: bold;
+  }
+  .family-table td {
+    border: 0.8px solid #aaa;
+    padding: 2px 4px;
+    vertical-align: middle;
+    height: 22px;
+  }
+  .family-table tr:nth-child(even) td { background: #fafff9; }
+  .family-table .hubungan-cell {
+    text-align: center;
+    font-weight: bold;
+    background: #e8f5e9;
+    white-space: nowrap;
+    font-size: 9.5px;
+    min-width: 60px;
+  }
+  .family-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 9px;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    padding: 0 2px;
+  }
+  .keterangan-radios {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .keterangan-radios label {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 8.5px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+    /* ── BOTTOM STRIP ── */
+    .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr 0.8fr 1.1fr;
+    border: 0.8px solid #aaa;
+    margin-top: 6px;
+  }
+  .bottom-cell {
+    border-right: 0.8px solid #aaa;
+    padding: 5px;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bottom-cell:last-child { border-right: none; }
+  .bottom-cell-title {
+    font-size: 9.5px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 0.5px solid #ccc;
+    padding-bottom: 3px;
+    width: 100%;
+    text-align: center;
+  }
+  .ttd-area {
+    flex: 1;
+    width: 100%;
+  }
+  .date-row-bottom {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 9px;
+    align-items: center;
+  }
+  .date-box-sm {
+    display: flex;
+    gap: 0;
+  }
+
+    /* ── FOOTER NOTE ── */
+    .footer-note {
+      margin-top: 8px;
+      font-size: 9.5px;
+      color: #444;
+      font-style: italic;
+    }
+
+    /* ── UTILITY ── */
+    .divider { height: 1px; background: #ccc; margin: 6px 0; }
+    .flex-center { display: flex; align-items: center; }
+    .ml4 { margin-left: 4px; }
+    .mr4 { margin-right: 4px; }
+    .mt4 { margin-top: 4px; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page { box-shadow: none; border: none; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <div class="header">
+    <div class="logo-area">
+      <!-- BPJS Logo (SVG approximation) -->
+      <h1><img src="BPJS_Ketenagakerjaan_logo.svg.png" width="190px"></h1>
+    </div>
+    <div style="text-align:center; flex:1; padding: 0 10px;">
+      <div class="form-title">
+        PENDAFTARAN TENAGA KERJA DAN PEMBERITAHUAN PERUBAHAN<br>
+        IDENTITAS TENAGA KERJA DAN SUSUNAN KELUARGA
+      </div>
+      <div class="form-type-row">
+        <label><input type="radio" name="form_type" value="baru"> Pendaftaran Baru</label>
+        <label><input type="radio" name="form_type" value="perubahan"> Perubahan Data</label>
+      </div>
+    </div>
+    <div class="form-number-box">Formulir<span>1a</span></div>
+  </div>
+
+  <!-- ═══════════════ BAGIAN I ═══════════════ -->
+  <div class="section-header" style="margin-top:6px;">BAGIAN I : IDENTITAS TENAGA KERJA</div>
+
+
+  <!-- Jamsostek question + NPP/KPJ box -->
+  <div class="form-row" style="align-items:flex-start; margin-bottom:6px;">
+    <div style="flex:1;">
+      <div class="form-row" style="margin-bottom:3px;">
+        <span style="font-size:10.5px;">Apakah sebelumnya anda sudah menjadi peserta Jamsostek / BPJS Ketenagakerjaan ?</span>
+        <div class="radio-group ml4">
+          <label><input type="radio" name="peserta" value="belum"> Belum</label>
+          <label><input type="radio" name="peserta" value="sudah"> Sudah</label>
+        </div>
+      </div>
+      <div class="form-row indent">
+        <span class="lbl wide" style="font-size:10px; color:#555;">Bila sudah, mohon<br>lengkapi Nomor KPJ anda:</span>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div class="char-boxes">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          </div>
+          <div class="char-boxes">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+            <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bpjs-box">
+      <small>(diisi pihak BPJS Ketenagakerjaan)</small>
+      <div class="bpjs-row">
+        <span class="bpjs-lbl">NPP</span>
+        <div class="char-boxes">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          <input type="text" maxlength="1">
+        </div>
+      </div>
+      <div class="bpjs-row">
+        <span class="bpjs-lbl">KPJ</span>
+        <div class="char-boxes">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+          <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nama Perusahaan -->
+  <div class="form-row">
+    <div style="display:flex; flex-direction:column; min-width:140px; flex-shrink:0;">
+      <span class="lbl">Nama Perusahaan:</span>
+      <span class="lbl sub">(sesuai perusahaan sekarang)</span>
+    </div>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+    </div>
+  </div>
+
+  <!-- NIK -->
+  <div class="form-row">
+    <span class="lbl">Nomor Induk Karyawan:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+    </div>
+  </div>
+
+  <!-- Nama Unit Kerja + Kode Unit Kerja -->
+  <div class="form-row">
+    <span class="lbl">Nama Unit Kerja:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+    </div>
+    <span class="lbl short ml4">Kode Unit Kerja:</span>
+     <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div>
+     </div>
+  </div>
+
+  <!-- Nama Lengkap Tenaga Kerja -->
+  <div class="form-row" style="align-items:flex-start;">
+    <span class="lbl" style="padding-top:16px;">Nama Lengkap Tenaga Kerja:</span>
+    <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
+      <div class="name-grid">
+        <div class="ng-row">
+          <span class="ng-lbl">Nama Depan</span>
+          <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+        </div>
+        <div class="ng-row">
+          <span class="ng-lbl">Nama Tengah</span>
+          <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+        </div>
+        <div class="ng-row">
+          <span class="ng-lbl">Nama Belakang</span>
+          <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+        </div>
+        <div class="ng-row">
+          <span class="ng-lbl">Gelar</span>
+          <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div style="min-width:120px; margin-left:10px;">
+      <div style="font-size:10px; margin-bottom:3px;">Pendidikan terakhir:</div>
+      <div class="edu-grid">
+        <label><input type="radio" name="edu" value="SD"> SD</label>
+        <label><input type="radio" name="edu" value="D3"> D3</label>
+        <label><input type="radio" name="edu" value="SMP"> SMP</label>
+        <label><input type="radio" name="edu" value="S1"> S1</label>
+        <label><input type="radio" name="edu" value="SMU"> SMU</label>
+        <label><input type="radio" name="edu" value="S2S3"> S2/S3</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tempat / Tanggal Lahir -->
+  <div class="form-row">
+    <span class="lbl">Tempat / Tanggal Lahir:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+    </div>
+    <span class="ml4 mr4">/</span>
+    <div style="display:flex; align-items:center; gap:4px;">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <input type="text" class="inp-date" placeholder="dd">
+        <span style="font-size:9px;color:#555;">tgl</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <input type="text" class="inp-date" placeholder="mm">
+        <span style="font-size:9px;color:#555;">bulan</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <input type="text" class="inp-year" placeholder="yyyy">
+        <span style="font-size:9px;color:#555;">tahun</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jenis Kelamin + Status Pernikahan -->
+  <div class="form-row">
+    <span class="lbl">Jenis Kelamin:</span>
+    <div class="radio-group">
+      <label><input type="radio" name="jk" value="L"> Laki-laki</label>
+      <label><input type="radio" name="jk" value="P"> Perempuan</label>
+    </div>
+    <span class="lbl short ml4">Status Pernikahan:</span>
+    <div class="radio-group">
+      <label><input type="radio" name="status" value="belum"> Belum menikah</label>
+      <label><input type="radio" name="status" value="menikah"> Menikah</label>
+    </div>
+  </div>
+
+  <!-- Golongan Darah + Kewarganegaraan -->
+  <div class="form-row">
+    <span class="lbl">Golongan Darah:</span>
+    <div class="radio-group">
+      <label><input type="radio" name="gd" value="O"> O</label>
+      <label><input type="radio" name="gd" value="A"> A</label>
+      <label><input type="radio" name="gd" value="B"> B</label>
+      <label><input type="radio" name="gd" value="AB"> AB</label>
+    </div>
+    <span class="lbl short ml4">Kewarganegaraan:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+    </div>
+    <div>
+    <span style="font-size:9px; color:#555; margin-left:4px; align-self:center;">Diisi khusus untuk warga negara asing</span>
+    </div>
+  </div>
+
+  <!-- Identitas Diri -->
+  <div class="form-row">
+    <span class="lbl">Identitas Diri:</span>
+    <div class="radio-group">
+      <label><input type="radio" name="identitas" value="ktp"> KTP</label>
+      <label><input type="radio" name="identitas" value="paspor"> Paspor</label>
+    </div>
+  </div>
+
+  <!-- Nomor Identitas -->
+  <div class="form-row">
+    <span class="lbl">Nomor Identitas Diri:</span>
+    <div class="char-boxes">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+    </div>
+    <span class="ml4" style="font-size:10px; align-self:center;">berlaku s/d</span>
+    <div style="display:flex; align-items:center; gap:4px; margin-left:4px;">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <input type="text" class="inp-date" placeholder="dd">
+        <span style="font-size:9px;color:#555;">tgl</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <input type="text" class="inp-date" placeholder="mm">
+        <span style="font-size:9px;color:#555;">bulan</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <input type="text" class="inp-year" placeholder="yyyy">
+        <span style="font-size:9px;color:#555;">tahun</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NPWP -->
+  <div class="form-row">
+    <span class="lbl">NPWP:</span>
+    <div class="char-boxes">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1"> <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+    </div>
+  </div>
+
+  <!-- Nama Ibu Kandung -->
+  <div class="form-row">
+    <span class="lbl">Nama Ibu Kandung:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+    </div>
+  </div>
+
+  <!-- Alamat Lengkap -->
+  <div class="form-row" style="align-items:flex-start;">
+    <div style="display:flex;flex-direction:column;min-width:140px;flex-shrink:0;">
+      <span>Alamat Lengkap:</span>
+      <span class="lbl sub">(sesuai identitas diri)</span>
+    </div>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+      <div class="addr-city-row">
+        <div style="display:flex;flex-direction:column;flex:1;">
+          <span style="font-size:9px;color:#555;">Kota</span>
+          <input type="text" class="inp-full">
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <span style="font-size:9px;color:#555;">Kode Pos</span>
+          <input type="text" style="width:80px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alamat Surat Menyurat -->
+  <div class="form-row" style="align-items:flex-start;">
+    <span class="lbl" style="padding-top:0;">Alamat Surat Menyurat:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+      <div class="addr-city-row">
+        <div style="display:flex;flex-direction:column;flex:1;">
+          <span style="font-size:9px;color:#555;">Kota</span>
+          <input type="text" class="inp-full">
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <span style="font-size:9px;color:#555;">Kode Pos</span>
+          <input type="text" style="width:80px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Telepon -->
+  <div class="form-row">
+    <span class="lbl">No. Telepon Rumah:</span>
+    <input type="tel" class="inp-sm"> <span class="ml4"></span> <input type="tel" class="inp-lg">
+  </div>
+  <div class="form-row">
+    <span class="lbl">No. Telepon Kantor:</span>
+    <input type="tel" class="inp-sm"> <span class="ml4"></span> <input type="tel" class="inp-lg">
+    <span class="ml4" style="font-size:10.5px; align-self:center;">Ext</span>
+    <input type="text" class="inp-sm ml4">
+  </div>
+  <div class="form-row">
+    <span class="lbl">No. HP:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+    </div>
+  </div>
+  <div class="form-row">
+    <span class="lbl">Alamat email:</span>
+    <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div>
+    </div>
+  </div>
+
+  <!-- Surat Menyurat ke -->
+  <div class="form-row">
+    <span class="lbl">Surat Menyurat ke:</span>
+    <div class="radio-group">
+      <label><input type="radio" name="surat" value="alamat"> Alamat Surat Menyurat</label>
+      <label><input type="radio" name="surat" value="email"> Alamat email</label>
+    </div>
+  </div>
+
+  <!-- Rekening Bank -->
+  <div class="form-row mt4"><strong>Rekening bank yang dimiliki:</strong></div>
+
+  <div class="form-row" style="align-items:flex-start; gap:10px;">
+    <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+      <div class="form-row">
+        <span class="lbl">Nama Bank:</span>
+        <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <span class="lbl">Cabang:</span>
+        <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <span class="lbl">Nomor Rekening Bank:</span>
+        <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <span class="lbl">Atas Nama:</span>
+        <div class="char-boxes">
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        <div class="char-box1"></div><div class="char-box1"></div><div class="char-box1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="kode-bank-box">
+      <div><strong>Kode Bank</strong></div>
+      <div class="char-boxes mt4">
+        <input type="text" maxlength="1"> <input type="text" maxlength="1">
+        <input type="text" maxlength="1"> <input type="text" maxlength="1">
+      </div>
+    </div>
+  </div>
+
+  <!-- BAGIAN II -->
+  <div class="section-header" style="margin-top:6px;">BAGIAN II : SUSUNAN KELUARGA</div>
+
+  <table class="family-table">
+    <thead>
+      <tr>
+        <th style="width:60px;">Hubungan<br>Keluarga</th>
+        <th>Nama Anggota Keluarga<br><span style="font-weight:normal; font-size:8px;">(seperti yang tercantum dalam Kartu Keluarga)</span></th>
+        <th style="width:80px;">Tgl Lahir<br>(dd/mm/yyyy)</th>
+        <th style="width:40px;">Jenis<br>Kelamin<br>(L / P)</th>
+        <th style="width:40px;">Golongan<br>Darah<br>(A, B, AB, O)</th>
+        <th>Keterangan<br><span style="font-weight:normal; font-size:8px;">(diaperbaharukan data)</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Istri/Suami -->
+      <tr>
+        <td class="hubungan-cell">Istri / Suami</td>
+        <td><input class="family-input" type="text" placeholder=""></td>
+        <td style="text-align:center;">
+         <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+          </div>
+        </td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td>
+          <div class="keterangan-radios">
+            <label><input type="radio" name="ket_0" value="lahir"> Lahir</label>
+            <label><input type="radio" name="ket_0" value="cerai"> Cerai</label>
+            <label><input type="radio" name="ket_0" value="meninggal"> Meninggal dunia</label>
+          </div>
+        </td>
+      </tr>
+      <!-- Anak 1 -->
+      <tr>
+        <td class="hubungan-cell">Anak</td>
+        <td><input class="family-input" type="text"></td>
+        <td style="text-align:center;">
+          <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            </div>
+        </td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td>
+          <div class="keterangan-radios">
+            <label><input type="radio" name="ket_1" value="lahir"> Lahir</label>
+            <label><input type="radio" name="ket_1" value="menikah"> Menikah</label>
+            <label><input type="radio" name="ket_1" value="meninggal"> Meninggal dunia</label>
+          </div>
+        </td>
+      </tr>
+      <!-- Anak 2 -->
+      <tr>
+        <td class="hubungan-cell">Anak</td>
+        <td><input class="family-input" type="text"></td>
+        <td style="text-align:center;">
+         <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            </div>
+        </td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td>
+          <div class="keterangan-radios">
+            <label><input type="radio" name="ket_2" value="lahir"> Lahir</label>
+            <label><input type="radio" name="ket_2" value="menikah"> Menikah</label>
+            <label><input type="radio" name="ket_2" value="meninggal"> Meninggal dunia</label>
+          </div>
+        </td>
+      </tr>
+      <!-- Anak 3 -->
+      <tr>
+        <td class="hubungan-cell">Anak</td>
+        <td><input class="family-input" type="text"></td>
+        <td style="text-align:center;">
+          <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            <span>/</span>
+            <div class="char-boxes">
+            <div class="char-box1"></div><div class="char-box1"></div>
+            </div>
+        </td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td><input class="family-input" type="text" style="text-align:center;"></td>
+        <td>
+          <div class="keterangan-radios">
+            <label><input type="radio" name="ket_3" value="lahir"> Lahir</label>
+            <label><input type="radio" name="ket_3" value="menikah"> Menikah</label>
+            <label><input type="radio" name="ket_3" value="meninggal"> Meninggal dunia</label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BOTTOM SECTION -->
+  <div class="bottom-section">
+    <div class="bottom-cell">
+      <div class="bottom-cell-title">Cap Jempol Kiri</div>
+      <div style="flex:1; width:100%;"></div>
+    </div>
+    <div class="bottom-cell">
+      <div class="bottom-cell-title">Tanda Tangan Tenaga Kerja</div>
+      <div style="flex:1; width:100%;"></div>
+    </div>
+    <div class="bottom-cell">
+      <div class="bottom-cell-title">Pas Foto 2x3</div>
+      <div style="flex:1; width:100%; border: 0.8px dashed #aaa; margin-top:4px;"></div>
+    </div>
+    <div class="bottom-cell">
+      <div class="bottom-cell-title">Diterima oleh petugas BPJS Ketenagakerjaan</div>
+      <div style="width:100%; margin-top:6px;">
+        <div style="display:flex; justify-content:center; gap:5px; align-items:flex-end; font-size:9px;">
+          <div>
+            <div class="char-boxes">
+              <div class="char-box" style="width:16px; height:18px;"></div>
+              <div class="char-box" style="width:16px; height:18px;"></div>
+            </div>
+            <div style="text-align:center;">tgl</div>
+          </div>
+          <div>
+            <div class="char-boxes">
+              <div class="char-box" style="width:16px; height:18px;"></div>
+              <div class="char-box" style="width:16px; height:18px;"></div>
+            </div>
+            <div style="text-align:center;">bulan</div>
+          </div>
+          <div>
+            <div class="char-boxes">
+              <div class="char-box" style="width:16px; height:18px;"></div>
+              <div class="char-box" style="width:16px; height:18px;"></div>
+              <div class="char-box" style="width:16px; height:18px;"></div>
+              <div class="char-box" style="width:16px; height:18px;"></div>
+            </div>
+            <div style="text-align:center;">tahun</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px; font-size:9.5px; font-weight:bold; text-align:center; border-top: 0.8px solid #aaa; padding-top:4px; width:100%;">
+        Ttd / Cap
+      </div>
+    </div>
+  </div>
+
+  <!-- Note -->
+  <div class="note-row" style="margin-top:5px;">
+    <strong>Keterangan:</strong> Seluruh informasi wajib diisi secara lengkap, isi dengan silang atau centang pada isian berbentuk lingkaran (&#9675;)
+  </div>
+</body>
+</html>
